@@ -106,11 +106,13 @@ Please use:
 
  ```bash
 git commit -m "<feature>(<assignedFeature>): <short-description>"
+or
+git commit -m "<fix>(<assignedFeature>): <short-description>"
 ```
 
 Push your changes to your feature branch
 ```bash
-git push origin feature/branch name
+git push origin feature/branchname
 ```
 
 
