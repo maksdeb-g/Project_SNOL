@@ -90,7 +90,6 @@ To checkout a branch, follow these steps:
 List branches: To see all available branches, run:
 
 ```bash
-git branch
 Checkout a branch: To switch to an existing branch, run:
 git checkout <branch-name>
 ```
