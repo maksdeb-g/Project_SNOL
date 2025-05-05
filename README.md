@@ -44,9 +44,8 @@ EXIT!             # Terminates interpreter
 ## 🧱 Modular Structure
 - **main.py:**
   - Interpreter Control Loop: Entry point. Reads user input, coordinates all modules, and manages the REPL and EXIT! command.
-- **lexer.py:**
+- **tokenizer.py:**
   - Tokenizer: Converts raw input into a list of tokens (keywords, literals, operators). Enforces syntax and token rules.
-- **parser.py:**
   - Syntax Validator: Parses token lists to recognize SNOL grammar. Returns structured data or errors.
 - **symbol_table.py:**
   - Variable Manager: Stores variables with types (int/float). Handles assignments, lookups, and reassignments.
@@ -54,7 +53,6 @@ EXIT!             # Terminates interpreter
   - Arithmetic Evaluator: Computes results from parsed expressions using correct precedence and type checks.
 - **io_handler.py:**
   - I/O Manager: Handles BEG var for input and PRINT commands for output formatting and variable lookups.
-
 
 
 ## 🧑‍🤝‍🧑 Member	Feature Area	Responsibility
@@ -84,6 +82,41 @@ Project_SNOL/
 ├── io_handler.py        # Input/output handlers
 ├── README.md            # Project documentation
 ```
+
+## Git Workflow
+1. Checkout a Branch
+To checkout a branch, follow these steps:
+
+List branches: To see all available branches, run:
+
+```bash
+git branch
+Checkout a branch: To switch to an existing branch, run:
+git checkout <branch-name>
+```
+
+2. Committing Changes
+```bash
+git add <specific file>
+or
+git add .
+```
+Commit Message Format
+Please use:
+
+ ```bash
+git commit -m "<feature>(<assignedFeature>): <short-description>"
+or
+git commit -m "<fix>(<assignedFeature>): <short-description>"
+```
+
+Push your changes to your feature branch
+```bash
+git push origin feature/branchname
+```
+
+
+
 
 
 
