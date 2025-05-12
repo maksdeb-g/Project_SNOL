@@ -1,5 +1,13 @@
 import io_handler as io 
 
+'''
+    Checks data type of an expression
+    Returns True if integer, False if floating-point number
+'''
+def expression_data_type(postfix: str) -> bool:
+    return '.' not in postfix  # True - integer, False - float
+
+
 def evaluate_float_expression(postfix: str) -> str:
     """Evaluate a postfix expression with floating-point numbers."""
     mystack = []
@@ -75,3 +83,29 @@ def evaluate_int_expression(postfix: str) -> str:
 
     result = mystack.pop()
     return str(int(result)) if io.num_data_type(result) else str(result)
+
+
+'''
+    Checks errors in the postfix expression (if numbers are of the same type)
+    Returns True if no errors, False if error is found
+    
+    Note: The argument passed to this function is the postfix expression returned from conversion_helper()
+          so split() is sufficient to tokenize the expression.
+'''
+def error_finder(postfix: str) -> bool:
+    tokens = postfix.split()     # Tokenize the postfix expression
+    prev_type = None             # Track the type of the previous number
+
+    for token in tokens:
+        # Check if token is a number 
+        is_number = token.lstrip('-').replace('.', '', 1).isdigit()
+        
+        if is_number:
+            # Check type: 1 - integer, 0 - float
+            curr_type = 1 if '.' not in token else 0
+
+            if prev_type is not None and curr_type != prev_type:
+                return False      # Error: mismatched types
+            prev_type = curr_type
+
+    return True                  # All numbers are of the same type
