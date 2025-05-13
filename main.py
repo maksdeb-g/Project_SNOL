@@ -1,6 +1,4 @@
-import re
-
-
+							
 # int precedence (char value);	- Trixie
 # main - Trixie	
 # string evaluateFloatExp (stack <float> mystack, string postfix); - Trixie
@@ -35,4 +33,5 @@ while input != "EXIT!":
                 tokenizer.assignmentOp(input_str)
         case 6:
             manual()
+
     
