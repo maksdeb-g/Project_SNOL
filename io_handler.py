@@ -1,5 +1,69 @@
 import re
 
+def manual():
+    """
+    Displays the SNOL Help Manual and waits for user confirmation to continue.
+    """
+    print()
+    print("=====================================================================================")
+    print(" CMSC 124 Final Requirement: SNOL (Simple Number-Only Language) Help Manual")
+    print("=====================================================================================")
+
+    # 1. FORMATTING
+    print("1. FORMATTING")
+    print("   Tokens may be separated by spaces but it is not required.")
+    print("   Commands can have no spaces. Identifiers and keywords are case-sensitive.")
+    print("     Examples:")
+    print("       var = 17         -> one space between tokens")
+    print("       var, VaR, VAR    -> different identifiers based on case")
+    print("-------------------------------------------------------------------------------------")
+
+    # 2. DATA TYPE
+    print("2. DATA TYPE")
+    print("   Two data types only: integer and float. No declarations needed.")
+    print("   Data type is inferred from your input values.")
+    print("     Examples:")
+    print("       num = 5 + 5       -> int")
+    print("       num = 5.5 + 5.5   -> float")
+    print("       num = 5 + 5.5     -> INVALID (mixed types)")
+    print("-------------------------------------------------------------------------------------")
+
+    # 3. ARITHMETIC OPERATIONS
+    print("3. ARITHMETIC OPERATIONS")
+    print("   All operands (numbers/values) must have the same data type.  ")
+    print("   Infix notation is the expected format of user input.")
+    print("   C-like precedence and associativity rules will be followed .")
+    print("-------------------------------------------------------------------------------------")
+
+    # 4. VARIABLES
+    print("4. VARIABLES")
+    print("   Variable names cannot be keywords. They may include letters and digits,")
+    print("   and must be defined before use. Variables hold evaluated expressions.")
+    print("-------------------------------------------------------------------------------------")
+
+    # 5. COMMANDS
+    print("5. COMMANDS")
+    print("   Any valid literal, variable, or operation is a command except")
+    print("   reserved keywords that trigger special behavior in the program.")
+    print("-------------------------------------------------------------------------------------")
+
+    # 6. SPECIAL KEYWORDS
+    print("6. SPECIAL KEYWORDS")
+    print("   > PRINT - Display a variable or literal.")
+    print("       Example:")
+    print("         num = 8")
+    print("         PRINT num\n")
+    print("   > BEG - Prompt the user for input into a variable.")
+    print("       Example:")
+    print("         BEG var")
+    print("         (user enters value for 'var')\n")
+    print("   > HELP - Shows this SNOL Help manual.\n")
+    print("   > EXIT! - Terminate the program.\n")
+    print("=====================================================================================\n")
+
+    input("Press ENTER to continue...")
+
+
 # Determines the type of SNOL command based on the input string.
 # Returns an integer code for use in a switch-like structure:
 # 1 = BEG, 2 = PRINT, 3 = EXIT!, 4 = Expression, 5 = Assignment, 6 = HELP, 7 = Simple expression, 0 = Unknown
