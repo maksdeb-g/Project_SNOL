@@ -1,15 +1,18 @@
 import re
+from tokenizer import isVariable, isDigit, is_operator
 
 def manual():
     """
     Displays the SNOL Help Manual and waits for user confirmation to continue.
+    Provides detailed information about the SNOL language, including formatting, data types, 
+    arithmetic operations, variables, commands, and special keywords.
     """
     print()
     print("=====================================================================================")
     print(" CMSC 124 Final Requirement: SNOL (Simple Number-Only Language) Help Manual")
     print("=====================================================================================")
 
-    # 1. FORMATTING
+    # Section 1: Formatting
     print("1. FORMATTING")
     print("   Tokens may be separated by spaces but it is not required.")
     print("   Commands can have no spaces. Identifiers and keywords are case-sensitive.")
@@ -18,7 +21,7 @@ def manual():
     print("       var, VaR, VAR    -> different identifiers based on case")
     print("-------------------------------------------------------------------------------------")
 
-    # 2. DATA TYPE
+    # Section 2: Data Types
     print("2. DATA TYPE")
     print("   Two data types only: integer and float. No declarations needed.")
     print("   Data type is inferred from your input values.")
@@ -28,26 +31,26 @@ def manual():
     print("       num = 5 + 5.5     -> INVALID (mixed types)")
     print("-------------------------------------------------------------------------------------")
 
-    # 3. ARITHMETIC OPERATIONS
+    # Section 3: Arithmetic Operations
     print("3. ARITHMETIC OPERATIONS")
-    print("   All operands (numbers/values) must have the same data type.  ")
+    print("   All operands (numbers/values) must have the same data type.")
     print("   Infix notation is the expected format of user input.")
-    print("   C-like precedence and associativity rules will be followed .")
+    print("   C-like precedence and associativity rules will be followed.")
     print("-------------------------------------------------------------------------------------")
 
-    # 4. VARIABLES
+    # Section 4: Variables
     print("4. VARIABLES")
     print("   Variable names cannot be keywords. They may include letters and digits,")
     print("   and must be defined before use. Variables hold evaluated expressions.")
     print("-------------------------------------------------------------------------------------")
 
-    # 5. COMMANDS
+    # Section 5: Commands
     print("5. COMMANDS")
     print("   Any valid literal, variable, or operation is a command except")
     print("   reserved keywords that trigger special behavior in the program.")
     print("-------------------------------------------------------------------------------------")
 
-    # 6. SPECIAL KEYWORDS
+    # Section 6: Special Keywords
     print("6. SPECIAL KEYWORDS")
     print("   > PRINT - Display a variable or literal.")
     print("       Example:")
@@ -63,58 +66,68 @@ def manual():
 
     input("Press ENTER to continue...")
 
-
-# Determines the type of SNOL command based on the input string.
-# Returns an integer code for use in a switch-like structure:
-# 1 = BEG, 2 = PRINT, 3 = EXIT!, 4 = Expression, 5 = Assignment, 6 = HELP, 7 = Simple expression, 0 = Unknown
 def commands(input_str: str) -> int:
-    if re.fullmatch(r"BEG\s+\S+", input_str): # BEG <var> input command
-        return 1
-    elif re.fullmatch(r"PRINT\s+\S+", input_str): # PRINT <var> or PRINT <literal>
-        return 2
-    elif input_str == "EXIT!": # Exit command
-        return 3
-    elif input_str == "HELP": # Help command
-        return 6
-    elif is_variable(input_str) or is_digit(input_str): # Simple variable or literal expression (e.g., "num" or "42")
-        return 7
+    """
+    Determines the type of SNOL command based on the input string.
     
-    elif '=' in input_str: # Assignment (must contain '=')
+    Args:
+        input_str (str): The input command string.
+    
+    Returns:
+        int: A code representing the command type:
+             1 = BEG, 2 = PRINT, 3 = EXIT!, 4 = Expression, 
+             5 = Assignment, 6 = HELP, 7 = Simple expression, 0 = Unknown.
+    """
+    if re.fullmatch(r"BEG\s+\S+", input_str):  # BEG <var> input command
+        return 1
+    elif re.fullmatch(r"PRINT\s+\S+", input_str):  # PRINT <var> or PRINT <literal>
+        return 2
+    elif input_str == "EXIT!":  # Exit command
+        return 3
+    elif input_str == "HELP":  # Help command
+        return 6
+    elif isVariable(input_str) or isDigit(input_str):  # Simple variable or literal expression
+        return 7
+    elif '=' in input_str:  # Assignment (must contain '=')
         return 5
-    elif any(op in input_str for op in "+-*/%"): # Arithmetic expression with operator(s) but no '='
+    elif any(op in input_str for op in "+-*/%"):  # Arithmetic expression with operators
         return 4
-    return 0 # If none matched, return 0 (unknown command)
+    return 0  # If none matched, return 0 (unknown command)
 
-
-# syntax_validation() - A function to validate if the input is a valid command - Maxwell
-# Accepts a string and an integer type
-# Returns True if the input is valid, otherwise returns False
 def syntax_validation(input_str: str, type_: int) -> bool:
-    var_pattern = r"\(*-?[A-Za-z][A-Za-z0-9]*\)*"
-    digit_pattern = r"\(*-?[0-9][0-9]*(\.[0-9]+)?\)*"
-
+    """
+    Validates if the input string is a valid command based on its type.
+    
+    Args:
+        input_str (str): The input command string.
+        type_ (int): The type of command to validate (1 = BEG, 2 = PRINT, etc.).
+    
+    Returns:
+        bool: True if the input is valid, False otherwise.
+    """
     parenthesis = 0
     temp = ''
 
-    # BEG Command
+    # BEG Command Validation
     if type_ == 1:
         temp = input_str[4:].strip()
-        if re.fullmatch(var_pattern, temp):
+        if re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", temp):  # Variable name validation
             return True
         else:
             print(f"SNOL> [{temp}] is not a valid variable name!")
             return False
 
-    # PRINT Command
+    # PRINT Command Validation
     elif type_ == 2:
         temp = input_str[6:].strip()
-        if re.fullmatch(var_pattern, temp) or re.fullmatch(digit_pattern, temp):
+        if isVariable(temp) or isDigit(temp):  # Validate variable or literal
             return True
         else:
-            print("SNOL> Unknown command! Does not match any valid command of the language.")
+            print("SNOL> Unknown command! Does not match any valid")
+            print("command of the language.")
             return False
 
-    # Expression
+    # Expression Validation
     elif type_ == 4:
         for i in range(len(input_str)):
             ch = input_str[i]
@@ -132,10 +145,12 @@ def syntax_validation(input_str: str, type_: int) -> bool:
                     temp += ch
                     continue
                 if len(temp.strip()) == 0:
-                    print("SNOL> Unknown command! Does not match any valid command of the language.")
+                    print("SNOL> Unknown command! Does not match any valid")
+                    print("command of the language.")
                     return False
-                if not (re.fullmatch(var_pattern, temp.strip()) or re.fullmatch(digit_pattern, temp.strip())):
-                    print("SNOL> Unknown command! Does not match any valid command of the language.")
+                if not (isVariable(temp.strip()) or isDigit(temp.strip())):
+                    print("SNOL> Unknown command! Does not match any valid")
+                    print("command of the language.")
                     return False
                 if ch == '/' and i + 1 < len(input_str) and input_str[i + 1] == '0':
                     print("SNOL> Division by zero is not allowed!")
@@ -148,12 +163,13 @@ def syntax_validation(input_str: str, type_: int) -> bool:
         if parenthesis != 0:
             print("SNOL> Missing parenthesis pair!")
             return False
-        if len(temp.strip()) == 0 or not (re.fullmatch(var_pattern, temp.strip()) or re.fullmatch(digit_pattern, temp.strip())):
-            print("SNOL> Unknown command! Does not match any valid command of the language.")
+        if len(temp.strip()) == 0 or not (isVariable(temp.strip()) or isDigit(temp.strip())):
+            print("SNOL> Unknown command! Does not match any valid")
+            print("command of the language.")
             return False
         return True
 
-    # Assignment Operation
+    # Assignment Operation Validation
     elif type_ == 5:
         equals = 0
         for i in range(len(input_str)):
@@ -172,7 +188,7 @@ def syntax_validation(input_str: str, type_: int) -> bool:
                 if equals > 1:
                     print("SNOL> Invalid! More than one '=' in the expression.")
                     return False
-                if not re.fullmatch(var_pattern, temp.strip()):
+                if not isVariable(temp.strip()):
                     print("SNOL> Error! Invalid variable name syntax.")
                     return False
                 temp = ''
@@ -181,10 +197,12 @@ def syntax_validation(input_str: str, type_: int) -> bool:
                     temp += ch
                     continue
                 if len(temp.strip()) == 0 or equals == 0:
-                    print("SNOL> Unknown command! Does not match any valid command of the language.")
+                    print("SNOL> Unknown command! Does not match any valid")
+                    print("command of the language.")
                     return False
-                if not (re.fullmatch(var_pattern, temp.strip()) or re.fullmatch(digit_pattern, temp.strip())):
-                    print("SNOL> Unknown command! Does not match any valid command of the language.")
+                if not (isVariable(temp.strip()) or isDigit(temp.strip())):
+                    print("SNOL> Unknown command! Does not match any valid")
+                    print("command of the language.")
                     return False
                 temp = ''
             elif ch == ' ':
@@ -194,14 +212,26 @@ def syntax_validation(input_str: str, type_: int) -> bool:
         if parenthesis != 0:
             print("SNOL> Missing parenthesis pair!")
             return False
-        if len(temp.strip()) == 0 or not (re.fullmatch(var_pattern, temp.strip()) or re.fullmatch(digit_pattern, temp.strip())):
-            print("SNOL> Unknown command! Does not match any valid command of the language.")
+        if len(temp.strip()) == 0 or not (isVariable(temp.strip()) or isDigit(temp.strip())):
+            print("SNOL> Unknown command! Does not match any valid")
+            print("command of the language.")
             return False
         return True
 
-    # Unknown type
+    # Unknown Command Type
     else:
         return False
 
+def num_data_type(num):
+    """
+    Check if a number is an integer or float.
+    
+    Args:
+        num (float): The number to check.
+    
+    Returns:
+        bool: True if the number is an integer, False if it is a float.
+    """
+    return num == int(num)
 
 
