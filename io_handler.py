@@ -1,3 +1,30 @@
+"""
+CMSC 124 Final Requirement: SNOL Interpreter
+Project Description: This project implements an interpreter for the SNOL (Simple Number Only Language), 
+a custom programming language designed for educational purposes. The interpreter supports basic commands 
+such as variable initialization, arithmetic operations, printing, and more.
+
+Programmers: 
+- Casquejo, Jann Dave Rhodore G.
+- Gazo, Maxwell Dave P.
+- Guillermo, Roslyn Faith U.
+- Ojanola, Janelle B.
+- Organiza, Trixie Nicole A.
+
+Date of Completion: May 17, 2025
+"""
+
+"""
+File: io_handler.py
+
+Description:
+This file contains the implementation of the input/output handler module for the SNOL (Simple Number Only Language) interpreter. 
+The I/O handler is responsible for managing user interactions, validating commands, and providing feedback. It includes 
+functions for displaying the help manual, classifying user commands, and validating the syntax of SNOL commands.
+"""
+
+
+
 import re
 from tokenizer import isVariable, isDigit, is_operator
 

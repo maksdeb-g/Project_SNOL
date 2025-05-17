@@ -1,4 +1,27 @@
-# === evaluator.py ===
+"""
+CMSC 124 Final Requirement: SNOL Interpreter
+Project Description: This project implements an interpreter for the SNOL (Simple Number Only Language), 
+a custom programming language designed for educational purposes. The interpreter supports basic commands 
+such as variable initialization, arithmetic operations, printing, and more.
+
+Programmers: 
+- Casquejo, Jann Dave Rhodore G.
+- Gazo, Maxwell Dave P.
+- Guillermo, Roslyn Faith U.
+- Ojanola, Janelle B.
+- Organiza, Trixie Nicole A.
+
+Date of Completion: May 17, 2025
+"""
+
+"""
+File: evaluator.py
+
+Description:
+This file contains the implementation of the evaluator module for the SNOL (Simple Number Only Language) interpreter. 
+The evaluator is responsible for processing and evaluating postfix expressions, handling both integer and floating-point 
+arithmetic. It also includes error-checking mechanisms to ensure valid expressions and consistent data types.
+"""
 
 import io_handler as io
 

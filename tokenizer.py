@@ -1,4 +1,28 @@
-# === tokenizer.py ===
+"""
+CMSC 124 Final Requirement: SNOL Interpreter
+Project Description: This project implements an interpreter for the SNOL (Simple Number Only Language), 
+a custom programming language designed for educational purposes. The interpreter supports basic commands 
+such as variable initialization, arithmetic operations, printing, and more.
+
+Programmers: 
+- Casquejo, Jann Dave Rhodore G.
+- Gazo, Maxwell Dave P.
+- Guillermo, Roslyn Faith U.
+- Ojanola, Janelle B.
+- Organiza, Trixie Nicole A.
+
+Date of Completion: May 17, 2025
+"""
+
+"""
+File: tokenizer.py
+
+Description:
+This file contains the implementation of the tokenizer module for the SNOL (Simple Number Only Language) interpreter. 
+The tokenizer is responsible for breaking down input strings into tokens, validating syntax, and converting infix 
+expressions to postfix notation for evaluation. It also provides utility functions for handling variables, operators, 
+and keywords in the SNOL language.
+"""
 
 import re
 from symbol_table import SymbolTable
