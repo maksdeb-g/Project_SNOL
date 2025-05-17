@@ -7,8 +7,7 @@ def main():
     Entry point for the SNOL interpreter.
     Handles user input, determines the command type, and executes the appropriate functionality.
     """
-    print("The SNOL environment is now active, you may proceed with")
-    print("giving your commands.")
+    print("The SNOL environment is now active, you may proceed with giving your commands.")
     
     while True:
         # Prompt the user for input
@@ -19,8 +18,8 @@ def main():
         
         if command_type == 0:
             # Invalid command
-            print("SNOL> Unknown command! Does not match any valid")
-            print("command of the language.")
+            print("SNOL> Unknown command! Does not match any valid command of the language.")
+            
         elif command_type == 1:  # BEG command
             # Handle variable initialization
             if syntax_validation(input_str, 1):

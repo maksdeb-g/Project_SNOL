@@ -78,7 +78,10 @@ def commands(input_str: str) -> int:
              1 = BEG, 2 = PRINT, 3 = EXIT!, 4 = Expression, 
              5 = Assignment, 6 = HELP, 7 = Simple expression, 0 = Unknown.
     """
-    if re.fullmatch(r"BEG\s+\S+", input_str):  # BEG <var> input command
+    # Fix for BEGvar command - check if input starts with BEG followed by a variable name
+    if input_str.startswith("BEG") and len(input_str) > 3 and isVariable(input_str[3:]):
+        return 1
+    elif re.fullmatch(r"BEG\s+\S+", input_str):  # Original BEG <var> input command
         return 1
     elif re.fullmatch(r"PRINT\s+\S+", input_str):  # PRINT <var> or PRINT <literal>
         return 2
@@ -90,7 +93,7 @@ def commands(input_str: str) -> int:
         return 7
     elif '=' in input_str:  # Assignment (must contain '=')
         return 5
-    elif any(op in input_str for op in "+-*/%"):  # Arithmetic expression with operators
+    elif any(op in input_str for op in "+-*/%") or '(' in input_str or ')' in input_str:  # Arithmetic expression with operators or parentheses
         return 4
     return 0  # If none matched, return 0 (unknown command)
 
@@ -110,7 +113,12 @@ def syntax_validation(input_str: str, type_: int) -> bool:
 
     # BEG Command Validation
     if type_ == 1:
-        temp = input_str[4:].strip()
+        # Fix for BEGvar command
+        if input_str.startswith("BEG") and len(input_str) > 3:
+            temp = input_str[3:].strip()
+        else:
+            temp = input_str[4:].strip()
+            
         if re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", temp):  # Variable name validation
             return True
         else:
@@ -123,99 +131,90 @@ def syntax_validation(input_str: str, type_: int) -> bool:
         if isVariable(temp) or isDigit(temp):  # Validate variable or literal
             return True
         else:
-            print("SNOL> Unknown command! Does not match any valid")
-            print("command of the language.")
+            print("SNOL> Unknown command! Does not match any valid command of the language.")
+            
             return False
 
     # Expression Validation
     elif type_ == 4:
+        # Improved expression validation to handle complex expressions like (1+3)*5
         for i in range(len(input_str)):
             ch = input_str[i]
-            if parenthesis < 0:
-                print("SNOL> Missing parenthesis pair!")
-                return False
             if ch == '(':
                 parenthesis += 1
                 temp += ch
             elif ch == ')':
                 parenthesis -= 1
+                if parenthesis < 0:
+                    print("SNOL> Missing parenthesis pair!")
+                    return False
                 temp += ch
             elif is_operator(ch):
-                if ch == '-' and i + 1 < len(input_str) and input_str[i + 1].isdigit():
+                # Handle negative numbers
+                if ch == '-' and (i == 0 or (i > 0 and (input_str[i-1] == '(' or is_operator(input_str[i-1])))):
                     temp += ch
                     continue
-                if len(temp.strip()) == 0:
-                    print("SNOL> Unknown command! Does not match any valid")
-                    print("command of the language.")
+                
+                # Skip operator validation for complex expressions
+                if len(temp.strip()) == 0 and ch != '-':
+                    print("SNOL> Unknown command! Does not match any valid command of the language.")
                     return False
-                if not (isVariable(temp.strip()) or isDigit(temp.strip())):
-                    print("SNOL> Unknown command! Does not match any valid")
-                    print("command of the language.")
-                    return False
+                
                 if ch == '/' and i + 1 < len(input_str) and input_str[i + 1] == '0':
                     print("SNOL> Division by zero is not allowed!")
                     return False
-                temp = ''
+                
+                # Reset temp after processing an operator
+                if len(temp.strip()) > 0:
+                    temp = ''
             elif ch == ' ':
                 continue
             else:
                 temp += ch
+                
         if parenthesis != 0:
             print("SNOL> Missing parenthesis pair!")
             return False
-        if len(temp.strip()) == 0 or not (isVariable(temp.strip()) or isDigit(temp.strip())):
-            print("SNOL> Unknown command! Does not match any valid")
-            print("command of the language.")
-            return False
+            
+        # Allow empty temp at the end for complex expressions
         return True
 
     # Assignment Operation Validation
     elif type_ == 5:
         equals = 0
-        for i in range(len(input_str)):
-            ch = input_str[i]
-            if parenthesis < 0:
-                print("SNOL> Missing parenthesis pair!")
-                return False
+        left_side = ""
+        right_side = ""
+        
+        # Split by first equals sign
+        parts = input_str.split('=', 1)
+        if len(parts) != 2:
+            print("SNOL> Invalid assignment expression!")
+            return False
+            
+        left_side = parts[0].strip()
+        right_side = parts[1].strip()
+        
+        # Validate left side is a variable
+        if not isVariable(left_side):
+            print("SNOL> Error! Invalid variable name syntax.")
+            return False
+            
+        # Validate right side has balanced parentheses
+        parenthesis = 0
+        for ch in right_side:
             if ch == '(':
                 parenthesis += 1
-                temp += ch
             elif ch == ')':
                 parenthesis -= 1
-                temp += ch
-            elif ch == '=':
-                equals += 1
-                if equals > 1:
-                    print("SNOL> Invalid! More than one '=' in the expression.")
+                if parenthesis < 0:
+                    print("SNOL> Missing parenthesis pair!")
                     return False
-                if not isVariable(temp.strip()):
-                    print("SNOL> Error! Invalid variable name syntax.")
-                    return False
-                temp = ''
-            elif is_operator(ch):
-                if ch == '-' and len(temp.strip()) == 0:
-                    temp += ch
-                    continue
-                if len(temp.strip()) == 0 or equals == 0:
-                    print("SNOL> Unknown command! Does not match any valid")
-                    print("command of the language.")
-                    return False
-                if not (isVariable(temp.strip()) or isDigit(temp.strip())):
-                    print("SNOL> Unknown command! Does not match any valid")
-                    print("command of the language.")
-                    return False
-                temp = ''
-            elif ch == ' ':
-                continue
-            else:
-                temp += ch
+                    
         if parenthesis != 0:
             print("SNOL> Missing parenthesis pair!")
             return False
-        if len(temp.strip()) == 0 or not (isVariable(temp.strip()) or isDigit(temp.strip())):
-            print("SNOL> Unknown command! Does not match any valid")
-            print("command of the language.")
-            return False
+            
+        # For complex expressions like (1+3)*5, we'll let the evaluator handle it
         return True
 
     # Unknown Command Type
@@ -233,5 +232,3 @@ def num_data_type(num):
         bool: True if the number is an integer, False if it is a float.
     """
     return num == int(num)
-
-
