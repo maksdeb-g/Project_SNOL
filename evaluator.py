@@ -28,11 +28,14 @@ def evaluate_float_expression(postfix: str) -> str:
     tokens = postfix.split()  # Split the postfix expression into tokens
 
     for token in tokens:
+        # Check if token is a number (including negative floats)
         if token.replace('.', '', 1).isdigit() or (token[0] == '-' and token[1:].replace('.', '', 1).isdigit()):
             # Push numeric tokens onto the stack
             mystack.append(float(token))
         elif token in '+-*/':
             # Perform arithmetic operations
+            if len(mystack) < 2:
+                return "Error! Invalid expression."
             if len(mystack) < 2:
                 return "Error! Invalid expression."
             val2 = mystack.pop()
@@ -52,6 +55,7 @@ def evaluate_float_expression(postfix: str) -> str:
             # Handle invalid tokens
             return "Error! Invalid token in the expression."
 
+    # Final result
     if len(mystack) != 1:
         # Ensure the stack contains exactly one result
         return "Error! Invalid expression."
