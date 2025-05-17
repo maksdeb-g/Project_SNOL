@@ -184,7 +184,7 @@ def syntax_validation(input_str: str, type_: int) -> bool:
 
     # Assignment Operation Validation
     elif type_ == 5:
-        equals = 0
+        
         left_side = ""
         right_side = ""
         
