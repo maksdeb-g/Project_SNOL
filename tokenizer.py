@@ -219,8 +219,8 @@ def BEG(input_str):
     
     Args:
         input_str (str): The input string containing the BEG command.
+        
     """
-    # Fix for BEGvar command
     if input_str.startswith("BEG") and len(input_str) > 3 and not input_str[3].isspace():
         var_name = input_str[3:].strip()
     else:
