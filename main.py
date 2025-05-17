@@ -39,7 +39,7 @@ def main():
             if varValidation(input_str):
                 value = getValue(input_str)
                 postfix_conversion(value)
-                # Don't print anything here
+                # Doesnt print anything here
         elif command_type == 5:  # Assignment
             # Handle variable assignment
             if syntax_validation(input_str, 5):
@@ -50,7 +50,7 @@ def main():
         elif command_type == 7:  # Simple expression (variable or literal)
             # Handle simple expressions (e.g., variable or literal evaluation)
             if varValidation(input_str):
-                # Don't print anything here
+                # Doesnt print anything here
                 pass
 
 if __name__ == "__main__":
