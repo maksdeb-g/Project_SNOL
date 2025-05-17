@@ -78,10 +78,13 @@ def commands(input_str: str) -> int:
              1 = BEG, 2 = PRINT, 3 = EXIT!, 4 = Expression, 
              5 = Assignment, 6 = HELP, 7 = Simple expression, 0 = Unknown.
     """
-    # Fix for BEGvar command - check if input starts with BEG followed by a variable name
-    if input_str.startswith("BEG") and len(input_str) > 3 and isVariable(input_str[3:]):
-        return 1
-    elif re.fullmatch(r"BEG\s+\S+", input_str):  # Original BEG <var> input command
+     # Handle BEG with a valid variable name
+    if input_str.startswith("BEG") and len(input_str) > 3:
+        # Skip the first character after "BEG" and validate the rest as a variable
+        variable_candidate = input_str[4:].strip()
+        if isVariable(variable_candidate):
+            return 1
+    elif re.fullmatch(r"BEG\s+\S+", input_str):
         return 1
     elif re.fullmatch(r"PRINT\s+\S+", input_str):  # PRINT <var> or PRINT <literal>
         return 2
